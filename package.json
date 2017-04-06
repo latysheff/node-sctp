@@ -1,0 +1,24 @@
+{
+  "name": "sctp",
+  "version": "0.0.1",
+  "author": {
+    "name": "Vladimir Latyshev",
+    "email": "latysheff@gmail.com"
+  },
+  "dependencies": {
+    "fast-crc32c": "^1.0.4",
+    "ip": "^1.1.5",
+    "lodash": "^4.17.4",
+    "log4js": "^1.1.1",
+    "raw-socket": "^1.5.1"
+  },
+  "description": "SCTP userspace sockets for Node.js",
+  "keywords": [
+    "sctp",
+    "sigtran",
+    "ss7"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "repository": "https://github.com/latysheff/node-sctp.git"
+}
