@@ -40,7 +40,6 @@ Module has alpha status. Please do not send patches and pull requests yet, bette
 
 Not implemented yet:
 
-* sequenced delivery (sequenced sending is by default)
 * multi-homing
 * IPv6
 * congestion control (incomplete)
@@ -81,6 +80,7 @@ server.listen({
 })
 
 var socket = sctp.connect({
+    protocol: sctp.protocol.M3UA,
     host: '127.0.0.1',
     port: 2905
 }, function () {
