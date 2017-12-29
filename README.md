@@ -4,9 +4,9 @@ This is a userspace (not kernel), pure Javascript implementation of SCTP protoco
 
 Module implements sockets interface ([RFC6458]) in Node.js [Net] API.
 
-> Warning! Warning! Warning!
+> Warning!
 
-Implementation  of [RFC4960] is currently incomplete and unstable, don't use in production environment!
+Implementation  of [RFC4960] is currently incomplete, use at your own risk!
 
 ## Disable LK-SCTP
 
@@ -16,7 +16,6 @@ On Linux LK-SCTP should be disabled, because it conflicts with any other impleme
 ## Raw socket
 
 ### Prerequisites for building [raw-socket] module
-
 Windows:
 ```
 npm install --global --production windows-build-tools
@@ -31,7 +30,10 @@ scl enable devtoolset-3 bash
 MacOS:
 install Xcode, accept license
 
-### Need root priveledges
+### Requirements
+Node.js version >=6
+
+### Need root privileges
 Quotation from [raw-socket] README:
 > Some operating system versions may restrict the use of raw sockets to privileged users. If this is the case an exception will be thrown on socket creation using a message similar to Operation not permitted (this message is likely to be different depending on operating system version).
 
@@ -40,29 +42,40 @@ Module has alpha status. Please do not send patches and pull requests yet, bette
 
 Not implemented yet:
 
-* multi-homing
+* multi-homing (work in progress)
 * IPv6
-* congestion control (incomplete)
-* counters
-* etc
+* minor features
 
 Nevertheless, module successfully passes most of `sctp_test` cases (both client and server)
 
-## Documentation
-Refer to [Net] API
+## Performance
+Load-testing against `sctp_test` shows that performance of sctp module in real world use cases is just about 2-3 times slower than native linux implementation.
 
+## Documentation
+Refer to Node.js [Net] API
+
+Some differences with TCP:
+
+**connect(options)**
+
+extra socket options:
+
+* options.MIS - maximum inbound streams (integer, default: 2)
+* options.OS - requested outbound streams (integer, default: 2)
+* options.logger - logger object for debugging purposes (e.g. console or log4js' logger)
 
 **sctp.protocol**
 
-sctp.protocol is a dictionary object with [SCTP Payload Protocol Identifiers][ppi]
+sctp.protocol is a dictionary object with [SCTP Payload Protocol Identifiers][ppid]
 
-For example, sctp.protocol.M3UA = 3
+**socket.SCTP_DEFAULT_SEND_PARAM(options)**
 
-```
-var sctp = require('sctp')
-console.log(Object.keys(sctp.protocol).join())
-//output: SCTP,IUA,M2UA,M3UA,SUA,M2PA,V5UA,H248,SSH,Diameter,Diameter_DTLS,WebRTC_DCEP,WebRTC_String,WebRTC_Binary,WebRTC_String_Empty,WebRTC_Binary_Empty
-```
+Set socket options related to write operations. Argument 'options' is an object with the following keys (all optional):
+
+* ppid: set payload protocol id (see above)
+* stream: sctp stream id (integer)
+* unordered: activate unordered mode (boolean)
+* no_bundle: disable chunk bundling (boolean)
 
 ## Quick example
 ```
@@ -80,11 +93,13 @@ server.listen({
 })
 
 var socket = sctp.connect({
-    protocol: sctp.protocol.M3UA,
     host: '127.0.0.1',
     port: 2905
 }, function () {
     console.log('socket connected')
+    socket.SCTP_DEFAULT_SEND_PARAM({
+        protocol: sctp.protocol.M3UA,
+    })
     socket.write(Buffer.from('010003010000001000110008000003ea', 'hex'))
 })
 
@@ -92,16 +107,17 @@ socket.on('data', function (buffer) {
     console.log('data', buffer)
     socket.end()
     server.close()
-    process.exit()
 })
 ```
 
 ## Credits
-Inspiration and some ideas are taken from [smpp] module
+* Inspiration and some ideas are taken from [smpp] module
+* crc32c function is from fast-crc32c module
+* SerialNumber is from serial-arithmetic module
 
 [raw-socket]: https://www.npmjs.com/package/raw-socket
 [Net]: https://nodejs.org/api/net.html
 [rfc4960]: https://tools.ietf.org/html/rfc4960
 [rfc6458]: https://tools.ietf.org/html/rfc6458
 [smpp]: https://www.npmjs.com/package/smpp
-[ppi]: https://www.iana.org/assignments/sctp-parameters/sctp-parameters.xhtml#sctp-parameters-25
+[ppid]: https://www.iana.org/assignments/sctp-parameters/sctp-parameters.xhtml#sctp-parameters-25

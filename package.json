@@ -1,16 +1,17 @@
 {
   "name": "sctp",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "Vladimir Latyshev",
     "email": "latysheff@gmail.com"
   },
+  "engines": {
+    "node": ">=6.0"
+  },
   "dependencies": {
-    "fast-crc32c": "^1.0.4",
-    "ip": "^1.1.5",
-    "lodash": "^4.17.4",
-    "log4js": "^1.1.1",
-    "raw-socket": "^1.5.1"
+    "ip": "*",
+    "lodash": "*",
+    "raw-socket": "*"
   },
   "description": "SCTP userspace sockets for Node.js",
   "keywords": [
