@@ -8,6 +8,8 @@ Module implements sockets interface ([RFC6458]) in Node.js [Net] API.
 
 Implementation  of [RFC4960] is currently incomplete, use at your own risk!
 
+Also raw-socket module seem to sometimes loose ip packets (extremely rarely). This is recovered by SCTP mechanisms of retransmission.
+
 ## Disable LK-SCTP
 
 On Linux LK-SCTP should be disabled, because it conflicts with any other implementation. To prevent the "sctp" kernel module from being loaded, add the following line to a file in the directory "/etc/modprobe.d":
@@ -64,9 +66,42 @@ extra socket options:
 * options.OS - requested outbound streams (integer, default: 2)
 * options.logger - logger object for debugging purposes (e.g. console or log4js' logger)
 
+**sctp.defaults(options)**
+
+Function sets default module default parameters. Names follow net.sctp conventions.
+See `sysctl -a | grep sctp`. Example:
+
+```
+sctp.defaults({
+  rto_initial: 500,
+  rto_min: 300,
+  rto_max: 1000,
+  sack_timeout: 150,
+  sack_freq: 2,
+})
+```
+Returns current default parameters.
+
 **sctp.protocol**
 
 sctp.protocol is a dictionary object with [SCTP Payload Protocol Identifiers][ppid]
+
+```
+{
+  SCTP: 0,
+  IUA: 1,
+  M2UA: 2,
+  M3UA: 3,
+  SUA: 4,
+  M2PA: 5,
+  V5UA: 6,
+  H248: 7,
+  BICC: 8,
+  ...
+  }
+```
+
+See example below.
 
 **socket.SCTP_DEFAULT_SEND_PARAM(options)**
 
@@ -112,8 +147,7 @@ socket.on('data', function (buffer) {
 
 ## Credits
 * Inspiration and some ideas are taken from [smpp] module
-* crc32c function is from fast-crc32c module
-* SerialNumber is from serial-arithmetic module
+* CRC algorithm ported from https://pycrc.org/
 
 [raw-socket]: https://www.npmjs.com/package/raw-socket
 [Net]: https://nodejs.org/api/net.html
