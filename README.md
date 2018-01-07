@@ -6,9 +6,7 @@ Module implements sockets interface ([RFC6458]) in Node.js [Net] API.
 
 > Warning!
 
-Implementation  of [RFC4960] is currently incomplete, use at your own risk!
-
-Also raw-socket module seem to sometimes loose ip packets (extremely rarely). This is recovered by SCTP mechanisms of retransmission.
+Implementation  of [RFC4960] is currently incomplete, use at your own risk.
 
 ## Disable LK-SCTP
 
@@ -68,8 +66,12 @@ extra socket options:
 
 **sctp.defaults(options)**
 
-Function sets default module default parameters. Names follow net.sctp conventions.
-See `sysctl -a | grep sctp`. Example:
+Function sets default module parameters. Names follow net.sctp conventions. Returns current default parameters.
+
+
+See `sysctl -a | grep sctp`
+ 
+Example:
 
 ```
 sctp.defaults({
@@ -80,7 +82,6 @@ sctp.defaults({
   sack_freq: 2,
 })
 ```
-Returns current default parameters.
 
 **sctp.protocol**
 
