@@ -1,19 +1,32 @@
 # Stream Control Transmission Protocol (SCTP) for Node.js
 
-This is a userspace (not kernel), pure Javascript implementation of SCTP protocol ([RFC4960]). It depends on [raw-socket] module as IP network layer. Raw-socket requires compilation, but builds on most popular platforms (Linux, Windows, MacOS). This makes SCTP module multi-platform, as Node.js itself.
+This is an implementation of SCTP network protocol ([RFC4960]) in plain Javascript.
 
-Module implements sockets interface ([RFC6458]) in Node.js [Net] API.
+Module presents the same socket interface as in Node.js [Net] module. 
+Sockets for SCTP are described in [RFC6458].
 
 > Warning!
-
 Implementation  of [RFC4960] is currently incomplete, use at your own risk.
 
-## Disable LK-SCTP
+### Installation
+npm install sctp
 
-On Linux LK-SCTP should be disabled, because it conflicts with any other implementation. To prevent the "sctp" kernel module from being loaded, add the following line to a file in the directory "/etc/modprobe.d":
-`install sctp /bin/true`
+## Normal mode
+SCTP over IP is widely used in telecommunications in such upper layer protocols 
+like Sigtran (M3UA, M2PA, M2UA) and Diameter.
 
-## Raw socket
+For operation in normal mode this module needs [raw-socket] Node.js module as IP network layer.
+Raw-socket module requires compilation during installation, 
+but builds on most popular platforms (Linux, Windows, MacOS).
+This makes sctp module multi-platform as Node.js itself.
+
+### Usage
+Application should globally provide raw-socket module as a transport.
+
+`sctp.raw(require('raw-socket'))`
+
+By the way, this doesn't prevent sctp to be used in mixed mode with UDP/DTLS, 
+but allows to remove direct dependency on binary module.
 
 ### Prerequisites for building [raw-socket] module
 Windows:
@@ -30,12 +43,56 @@ scl enable devtoolset-3 bash
 MacOS:
 install Xcode, accept license
 
-### Requirements
-Node.js version >=6
-
 ### Need root privileges
 Quotation from [raw-socket] README:
 > Some operating system versions may restrict the use of raw sockets to privileged users. If this is the case an exception will be thrown on socket creation using a message similar to Operation not permitted (this message is likely to be different depending on operating system version).
+
+### Disable Linux Kernel SCTP
+Linux Kernel SCTP should be disabled, because it conflicts with any other implementation.
+To prevent the "sctp" kernel module from being loaded,
+add the following line to a file in the directory "/etc/modprobe.d/"
+
+`install sctp /bin/true`
+
+## UDP/DTLS mode
+It is possible to use UDP/DTLS socket as transport layer for SCTP. Layer should implement [UDP] API.
+
+This application of SCTP is described in [RFC8261]
+
+>   The Stream Control Transmission Protocol (SCTP) as defined in
+    [RFC4960] is a transport protocol running on top of the network
+    protocols IPv4 [RFC0791] or IPv6 [RFC8200].  This document specifies
+    how SCTP is used on top of the Datagram Transport Layer Security
+    (DTLS) protocol.  DTLS 1.0 is defined in [RFC4347], and the latest
+    version when this RFC was published, DTLS 1.2, is defined in
+    [RFC6347].  This encapsulation is used, for example, within the
+    WebRTC protocol suite (see [RTC-OVERVIEW] for an overview) for
+    transporting non-SRTP data between browsers.
+
+Using DTLS mode, Node.js application can be a peer in WebRTC [data channel][RTCDataChannel].
+
+### Usage
+You need to provide **udpTransport** option when connecting socket or creating server:
+
+```
+let socket = sctp.connect({
+       passive: true,
+       localPort: 5000,
+       port: 5000,
+       udpTransport: myDTLSSocket,
+     }
+```
+
+In UDP/DTLS mode host and localAddress will be ignored, 
+because addressing is provided by underlying transport.
+
+Also note that in most cases "passive" connect is better alternative to creating server. 
+**passive** option disables active connect to remote peer. Socket waits for remote connection, 
+allowing it only from indicated remote port.
+This unusual option doesn't exist in TCP API.
+
+## Requirements
+Node.js version >=6
 
 ## Module status
 Module has alpha status. Please do not send patches and pull requests yet, better ask for bug fixes and feature implementation.
@@ -45,29 +102,66 @@ Not implemented yet:
 * multi-homing (work in progress)
 * IPv6
 * minor features
+* measures to avoid silly window syndrome (SWS)
+* various protocol extensions
 
-Nevertheless, module successfully passes most of `sctp_test` cases (both client and server)
+Nevertheless, module successfully passes most of `sctp_test` cases (both client and server).
+More compatibility testing will follow with use of stcp test tools and frameworks.
 
 ## Performance
-Load-testing against `sctp_test` shows that performance of sctp module in real world use cases is just about 2-3 times slower than native linux implementation.
+Load-testing against `sctp_test` shows that performance of sctp module in real world use cases 
+is just about 2-3 times slower than native Linux Kernel SCTP implementation.
 
 ## Documentation
-Refer to Node.js [Net] API
+Refer to Node.js [Net] API.
 
-Some differences with TCP:
+Several existing differences explained below.
 
-**connect(options)**
+### new net.Socket([options])
+> RFC 4960: SCTP does not support a half-open state (like TCP)
+wherein one side may continue sending data while the other end is closed.
 
-extra socket options:
+### socket.connect(options[, connectListener])
 
-* options.MIS - maximum inbound streams (integer, default: 2)
-* options.OS - requested outbound streams (integer, default: 2)
-* options.logger - logger object for debugging purposes (e.g. console or log4js' logger)
+* options [Object]
+* connectListener [Function] Common parameter of socket.connect() methods.
+Will be added as a listener for the 'connect' event once.
 
-**sctp.defaults(options)**
+For SCTP connections, available options are:
+
+* port [number] Required. Port the socket should connect to.
+* host [string] Host the socket should connect to. Default: 'localhost'
+* localAddress [string] Local address the socket should connect from.
+* localPort [number] Local port the socket should connect from.
+* MIS [number] Maximum inbound streams. Default: 2
+* OS [number] Requested outbound streams. Default: 2
+* passive [boolean] Indicates passive mode. Socket will not connect,
+but allow connection of remote socket from host:port. Default: false
+* logger [Object] Logger object for debugging purposes (e.g. console or log4js logger)
+* udpTransport [Object] UDP transport socket
+
+### socket.SCTP_DEFAULT_SEND_PARAM(options)
+* options [Object]
+
+Set socket options related to write operations. Argument 'options' is an object with the following keys (all optional):
+
+* ppid [number] Payload protocol id (see below)
+* stream [number] SCTP stream id. Default: 0
+* unordered [boolean] Indicate unordered mode. Default: false
+* no_bundle [boolean] Disable chunk bundling. Default: false
+
+### sctp.raw(module)
+* module Should be [raw-socket] module and nothing else.
+
+### sctp.setLogger(logger)
+* logger Global logger for transport.
+
+Example: 
+`sctp.transport(require('raw-socket'), console)`
+
+### sctp.defaults(options)
 
 Function sets default module parameters. Names follow net.sctp conventions. Returns current default parameters.
-
 
 See `sysctl -a | grep sctp`
  
@@ -83,9 +177,9 @@ sctp.defaults({
 })
 ```
 
-**sctp.protocol**
+### sctp.protocol
 
-sctp.protocol is a dictionary object with [SCTP Payload Protocol Identifiers][ppid]
+sctp.protocol is an object with [SCTP Payload Protocol Identifiers][ppid]
 
 ```
 {
@@ -102,21 +196,11 @@ sctp.protocol is a dictionary object with [SCTP Payload Protocol Identifiers][pp
   }
 ```
 
-See example below.
-
-**socket.SCTP_DEFAULT_SEND_PARAM(options)**
-
-Set socket options related to write operations. Argument 'options' is an object with the following keys (all optional):
-
-* ppid: set payload protocol id (see above)
-* stream: sctp stream id (integer)
-* unordered: activate unordered mode (boolean)
-* no_bundle: disable chunk bundling (boolean)
-
-## Quick example
+## Example
 ```
-var sctp = require('sctp')
-var server = sctp.createServer()
+const sctp = require('sctp')
+sctp.raw(require('raw-socket')))
+let server = sctp.createServer()
 server.on('connection', function (socket) {
     console.log('remote socket connected from', socket.remoteAddress, socket.remotePort)
     socket.on('data', function (data) {
@@ -128,7 +212,7 @@ server.listen({
     port: 2905
 })
 
-var socket = sctp.connect({
+let socket = sctp.connect({
     host: '127.0.0.1',
     port: 2905
 }, function () {
@@ -152,7 +236,10 @@ socket.on('data', function (buffer) {
 
 [raw-socket]: https://www.npmjs.com/package/raw-socket
 [Net]: https://nodejs.org/api/net.html
-[rfc4960]: https://tools.ietf.org/html/rfc4960
-[rfc6458]: https://tools.ietf.org/html/rfc6458
+[UDP]: https://nodejs.org/api/dgram.html
+[RTCDataChannel]: https://developer.mozilla.org/en-US/docs/Web/API/RTCDataChannel
+[RFC4960]: https://tools.ietf.org/html/rfc4960
+[RFC6458]: https://tools.ietf.org/html/rfc6458
+[RFC8261]: https://tools.ietf.org/html/rfc8261
 [smpp]: https://www.npmjs.com/package/smpp
 [ppid]: https://www.iana.org/assignments/sctp-parameters/sctp-parameters.xhtml#sctp-parameters-25

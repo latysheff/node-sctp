@@ -1,6 +1,6 @@
 {
   "name": "sctp",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": {
     "name": "Vladimir Latyshev",
     "email": "latysheff@gmail.com"
@@ -10,14 +10,16 @@
   },
   "dependencies": {
     "ip": "*",
-    "lodash": "*",
-    "raw-socket": "*"
+    "lodash": "*"
   },
-  "description": "SCTP userspace sockets for Node.js",
+  "description": "The sctp module provides an asynchronous network API for creating stream-based Stream Control Transmission Protocol (SCTP) servers and clients",
   "keywords": [
+    "RFC4960",
     "sctp",
     "sigtran",
-    "ss7"
+    "ss7",
+    "RFC8261",
+    "webrtc"
   ],
   "license": "MIT",
   "main": "lib/index.js",
