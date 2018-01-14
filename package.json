@@ -9,17 +9,18 @@
     "node": ">=6.0"
   },
   "dependencies": {
-    "ip": "*",
-    "lodash": "*"
+    "ip": "^1.1.5",
+    "lodash": "^4.17.4"
   },
-  "description": "The sctp module provides an asynchronous network API for creating stream-based Stream Control Transmission Protocol (SCTP) servers and clients",
+  "description": "SCTP network protocol (RFC4960) in plain Javascript",
   "keywords": [
     "RFC4960",
-    "sctp",
-    "sigtran",
-    "ss7",
+    "SCTP",
+    "Sigtran",
+    "SS7",
     "RFC8261",
-    "webrtc"
+    "DTLS",
+    "WebRTC"
   ],
   "license": "MIT",
   "main": "lib/index.js",

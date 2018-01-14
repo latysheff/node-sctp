@@ -118,7 +118,8 @@ Refer to Node.js [Net] API.
 Several existing differences explained below.
 
 ### new net.Socket([options])
-> RFC 4960: SCTP does not support a half-open state (like TCP)
+RFC 4960: 
+> SCTP does not support a half-open state (like TCP)
 wherein one side may continue sending data while the other end is closed.
 
 ### socket.connect(options[, connectListener])
