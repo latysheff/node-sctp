@@ -25,7 +25,7 @@ Application should globally provide raw-socket module as a transport.
 
 `sctp.raw(require('raw-socket'))`
 
-By the way, this doesn't prevent sctp to be used in mixed mode with UDP/DTLS, 
+This doesn't prevent sctp to be used in mixed mode with UDP/DTLS (see below), 
 but allows to remove direct dependency on binary module.
 
 ### Prerequisites for building [raw-socket] module
@@ -154,11 +154,13 @@ Set socket options related to write operations. Argument 'options' is an object 
 ### sctp.raw(module)
 * module Should be [raw-socket] module and nothing else.
 
+`sctp.raw(require('raw-socket'))`
+
 ### sctp.setLogger(logger)
 * logger Global logger for transport.
 
 Example: 
-`sctp.transport(require('raw-socket'), console)`
+`sctp.setLogger(console)`
 
 ### sctp.defaults(options)
 
@@ -233,7 +235,6 @@ socket.on('data', function (buffer) {
 
 ## Credits
 * Inspiration and some ideas are taken from [smpp] module
-* CRC algorithm ported from https://pycrc.org/
 
 [raw-socket]: https://www.npmjs.com/package/raw-socket
 [Net]: https://nodejs.org/api/net.html
