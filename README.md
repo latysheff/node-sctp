@@ -21,12 +21,11 @@ but builds on most popular platforms (Linux, Windows, MacOS).
 This makes sctp module multi-platform as Node.js itself.
 
 ### Usage
-Application should globally provide raw-socket module as a transport.
-
-`sctp.raw(require('raw-socket'))`
-
-This doesn't prevent sctp to be used in mixed mode with UDP/DTLS (see below), 
+Sctp will try to dynamically require raw-socket module.
+Raw socket mode does not prevent sctp to be used in with UDP/DTLS (see below), 
 but allows to remove direct dependency on binary module.
+
+You may have to install raw-socket module manually.
 
 ### Prerequisites for building [raw-socket] module
 Windows:
@@ -108,6 +107,9 @@ Not implemented yet:
 Nevertheless, module successfully passes most of `sctp_test` cases (both client and server).
 More compatibility testing will follow with use of stcp test tools and frameworks.
 
+## Debugging
+Set environment variable DEBUG=sctp:*
+
 ## Performance
 Load-testing against `sctp_test` shows that performance of sctp module in real world use cases 
 is just about 2-3 times slower than native Linux Kernel SCTP implementation.
@@ -150,17 +152,6 @@ Set socket options related to write operations. Argument 'options' is an object 
 * stream [number] SCTP stream id. Default: 0
 * unordered [boolean] Indicate unordered mode. Default: false
 * no_bundle [boolean] Disable chunk bundling. Default: false
-
-### sctp.raw(module)
-* module Should be [raw-socket] module and nothing else.
-
-`sctp.raw(require('raw-socket'))`
-
-### sctp.setLogger(logger)
-* logger Global logger for transport.
-
-Example: 
-`sctp.setLogger(console)`
 
 ### sctp.defaults(options)
 
