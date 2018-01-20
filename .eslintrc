@@ -1,6 +1,5 @@
 {
   "plugins": [
-    "prettier"
   ],
   "env": {
     "browser": true,
@@ -9,13 +8,29 @@
     "jest": true
   },
   "rules": {
-    "prettier/prettier": ["error", {
-      "semi": false,
-      "singleQuote": true,
-      "trailingComma": "es5"
-    }],
     "no-undef": "error",
     "no-unused-vars": "error",
-    "max-len": ["error", { "code": 80 }]
+    "no-warning-comments": "off",
+    "no-mixed-operators": "off",
+    "guard-for-in": "off",
+    "max-params": [
+      "warn",
+      {
+        "max": 5
+      }
+    ],
+    "new-cap": "off",
+    "max-len": [
+      "error",
+      {
+        "code": 100
+      }
+    ],
+    "camelcase": [
+      "error",
+      {
+        "properties": "never"
+      }
+    ]
   }
 }

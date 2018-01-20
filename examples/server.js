@@ -1,36 +1,36 @@
-let sctp = require('../lib')
+const util = require('util')
+const ip = require('ip')
 
-let ip = require('ip')
-let util = require('util')
+const sctp = require('../lib')
 
-let port = 3000
+const port = 3000
 
 sctp.defaults({
   rto_initial: 500,
   rto_min: 300,
   rto_max: 1000,
   sack_timeout: 100,
-  sack_freq: 2,
+  sack_freq: 2
 })
 
 let i = 0
-let server = sctp.createServer({}, (socket)=> {
+const server = sctp.createServer({}, socket => {
   console.log(
     'remote socket connected from',
     socket.remoteAddress,
     socket.remotePort
   )
-  socket.on('data', function(data) {
-    // console.log('< server received data', data)
+  socket.on('data', data => {
+    console.log('< server received data', data)
     socket.write('count' + i++)
   })
-  socket.on('error', function() {})
-  socket.on('end', function() {})
+  socket.on('error', () => {})
+  socket.on('end', () => {})
 })
 
 server.listen({
   MIS: 2,
-  port: port,
+  port
 })
 
 console.log('server started on port %d', port)
@@ -38,7 +38,7 @@ console.log('now run test, for example:')
 console.log(
   'info',
   util.format(
-    'sctp_test -H <remote ip> -h <%s or another local ip> -p %d -s -P <remote port> -x 10000 -d0 -c 2',
+    'sctp_test -H <ip> -h <%s or another local ip> -p %d -s -P <port> -x 10000 -d0 -c 2',
     ip.address(),
     port
   )
@@ -46,7 +46,7 @@ console.log(
 
 process.on('SIGINT', () => {
   console.log('SIGINT')
-  // todo close socket
+  // Todo close socket
   setTimeout(() => {
     console.log('exiting')
     process.exit()

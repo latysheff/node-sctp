@@ -193,7 +193,6 @@ sctp.protocol is an object with [SCTP Payload Protocol Identifiers][ppid]
 ## Example
 ```
 const sctp = require('sctp')
-sctp.raw(require('raw-socket')))
 let server = sctp.createServer()
 server.on('connection', function (socket) {
     console.log('remote socket connected from', socket.remoteAddress, socket.remotePort)

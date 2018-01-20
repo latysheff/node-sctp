@@ -1,6 +1,6 @@
 {
   "name": "sctp",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "author": {
     "name": "Vladimir Latyshev",
     "email": "latysheff@gmail.com"
@@ -16,11 +16,10 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "eslint": "^4.16.0",
-    "eslint-plugin-prettier": "^2.5.0",
     "mocha": "^5.0.0",
-    "prettier": "^1.10.2",
     "raw-socket": "^1.5.2",
-    "supports-color": "^5.1.0"
+    "supports-color": "^5.1.0",
+    "xo": "^0.18.2"
   },
   "description": "SCTP network protocol (RFC4960) in plain Javascript",
   "keywords": [
@@ -35,7 +34,25 @@
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "xo && mocha"
+  },
+  "xo": {
+    "space": true,
+    "semicolon": false,
+    "extends": ".eslintrc",
+    "overrides": [
+      {
+        "files": "test/*.js",
+        "rules": {
+          "max-len": [
+            "error",
+            {
+              "code": 300
+            }
+          ]
+        }
+      }
+    ]
   },
   "repository": "https://github.com/latysheff/node-sctp.git"
 }
