@@ -1,40 +1,25 @@
 #!/usr/bin/node
-
+const fs = require('fs')
 const sctp = require('../lib')
 
-const server = sctp.createServer()
+const [node, script, host, port] = process.argv
+console.log(node, script, host, port)
 
-server.on('connection', socket => {
-  console.log(
-    'remote socket connected from',
-    socket.remoteAddress,
-    socket.remotePort
-  )
-  socket.on('data', data => {
-    console.log('server socket received data', data)
-    socket.write(Buffer.from('010003040000001000110008000003ea', 'hex'))
+const socket = sctp.connect({host, port, highWaterMark: 1000}, () => {
+  console.log('socket connected')
+  socket.on('error', error => {
+    console.error(error)
   })
-})
-
-server.listen({port: 2905}, () => {
-  console.log('server listening')
-})
-
-const socket = sctp.connect(
-  {
-    console,
-    host: '127.0.0.1',
-    port: 2905
-  },
-  () => {
-    console.log('socket connected')
-    socket.write(Buffer.from('010003010000001000110008000003ea', 'hex'))
-  }
+  fs.createReadStream(node).pipe(socket)
+}
 )
 
-socket.on('data', buffer => {
-  console.log('socket received data from server', buffer)
-  socket.end()
-  server.close()
+const start = Date.now()
+const size = fs.statSync(node).size / 1024
+socket.on('end', () => {
+  const time = (Date.now() - start) / 1000
+  // Console.log(fs.statSync(node))
+  console.log('transfer rate', ~~(size / time), 'kB/s')
+  // Socket.end()
   process.exit()
 })
