@@ -13,41 +13,69 @@ sctp.defaults({
   sack_timeout: 100,
   sack_freq: 2
 })
-const fileName = './tmp.bin'
+const fileName = ''
 
 let count = 0
-const server = sctp.createServer({}, socket => {
+const server = sctp.createServer(socket => {
+  const start = Date.now()
   count = 0
   console.log(
     'remote socket connected from',
     socket.remoteAddress,
     socket.remotePort
   )
-  socket.pipe(fs.createWriteStream(fileName))
+  if (fileName) {
+    socket.pipe(fs.createWriteStream(fileName))
+  }
 
-  socket.on('data', data => {
+  const streamOut = socket.createStream(110)
+
+  streamOut.on('error', error => {
+    console.log(error.message)
+  })
+
+  socket.on('stream', (streamIn, id) => {
+    console.log('< new sctp stream', id)
+    // Uncomment to receive data
+    // streamIn.on('data', data => {
+    //   // Incoming data
+    //   // console.log('< received data on stream', data.length, 'bytes')
+    //   // streamOut.write(data)
+    // })
+  })
+
+  socket.on('data', () => {
     count++
-    console.log('< server received data', data)
-    if (!socket.destroyed)
-      socket.write(data)
+    // Io impacts performance
+    // console.log('< server received', data.length, 'bytes')
+    // Send data back
+    // if (!socket.destroyed) socket.write(data)
   })
-  socket.on('error', err => {
-    console.log(err)
+
+  socket.on('error', error => {
+    console.log(error.message)
   })
+
   socket.on('end', () => {
+    const duration = Date.now() - start
+    const rate = Math.floor(socket.bytesRead / duration / 1024 / 1024 * 100000) / 100
+    const ratePackets = ~~(count / duration * 1000)
     console.log(
       util.format(
-        '%d packets, %d bytes read, %d bytes sent',
-        count, socket.bytesRead, socket.bytesWritten
+        '%d packets, %d bytes read, %d bytes sent, rate %d MB/s, %d packets/sec',
+        count, socket.bytesRead, socket.bytesWritten, rate, ratePackets
       )
     )
-    console.log('Contents of piped file (first 100 bytes):')
-    console.log(fs.readFileSync(fileName).slice(0, 100).toString())
+    if (fileName) {
+      console.log('Contents of piped file (first 100 bytes):')
+      console.log(fs.readFileSync(fileName).slice(0, 100).toString())
+    }
   })
 })
 
 server.listen({
-  MIS: 2,
+  OS: 1000,
+  MIS: 10,
   port
 })
 

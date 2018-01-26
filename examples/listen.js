@@ -16,7 +16,7 @@ sock1.on('end', () => {
 })
 
 const sock2 = sctp.connect({
-  protocol: sctp.protocol.M2PA,
+  protocol: sctp.PPID.M2PA,
   host: '127.0.0.1',
   localPort: 3566,
   port: 3565
