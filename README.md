@@ -1,12 +1,10 @@
 # Stream Control Transmission Protocol (SCTP) for Node.js
-
 This is an implementation of SCTP network protocol ([RFC4960]) in plain Javascript.
 
 Module presents the socket interface of [Net] module.
 Sockets for SCTP are described in [RFC6458].
 
 ## Module status
-
 > Warning!
 Implementation of [RFC4960] is currently incomplete, use at your own risk.
 
@@ -53,7 +51,6 @@ socket.on('data', buffer => {
 ```
 
 ## Different underlying transport
-
 It is possible to run SCTP protocol on top of IP transport layer
 or on top of DTLS transport.
 
@@ -99,7 +96,6 @@ add the following line to a file in the directory "/etc/modprobe.d/"
 `install sctp /bin/true`
 
 ### WebRTC mode (DTLS transport)
-
 This application of SCTP protocol is described in [RFC8261].
 
 >   The Stream Control Transmission Protocol (SCTP) as defined in
@@ -155,7 +151,6 @@ Refer to Node.js [Net] API.
 Several existing differences explained below.
 
 ### new net.Socket([options])
-
 * options [Object]
 
 For SCTP socketss, available options are:
@@ -169,7 +164,6 @@ Note: SCTP does not support a half-open state (like TCP)
 wherein one side may continue sending data while the other end is closed.
 
 ### socket.connect(options[, connectListener])
-
 * options [Object]
 * connectListener [Function] Common parameter of socket.connect() methods.
 Will be added as a listener for the 'connect' event once.
@@ -187,7 +181,6 @@ but allow connection of remote socket from host:port. Default: false
 * udpTransport [Object] UDP transport socket
 
 ### socket.createStream(id)
-
 Creates SCTP stream with stream id. Those are SCTP socket sub-streams.
 
 > After the association is initialized, the valid outbound stream
@@ -204,7 +197,6 @@ stream.write('some data')
 ```
 
 ### Socket events
-
 See [Net] module documentation.
 
 For SCTP additional event 'stream' is defined.
@@ -219,7 +211,6 @@ socket.on('stream', (stream, id) => {
 ```
 
 ### sctp.defaults(options)
-
 Function sets default module parameters. Names follow net.sctp conventions. Returns current default parameters.
 
 See `sysctl -a | grep sctp`
@@ -237,7 +228,6 @@ sctp.defaults({
 ```
 
 ### sctp.PPID
-
 sctp.PPID is an object with [SCTP Payload Protocol Identifiers][ppid]
 
 ```
@@ -256,15 +246,17 @@ sctp.PPID is an object with [SCTP Payload Protocol Identifiers][ppid]
 ```
 
 ## RFC to implement
-
 * [3758 Partial Reliability Extension][RFC3758]
+* [4820 Padding Chunk and Parameter][RFC4820]
+* [4895 Authenticated Chunks][RFC4895]
 * [5061 Dynamic Address Reconfiguration][RFC5061]
-* [6096 Chunk Flags Registration][RFC6096]
+* [5062 Security Attacks Found Against SCTP and Current Countermeasures][RFC5062]
 * [6525 Stream Reconfiguration][RFC6525]
-* [7053 SACK-IMMEDIATELY Extension][RFC7053]
+* [7053 SACK-IMMEDIATELY Extension (I-bit)][RFC7053]
 * [7829 SCTP-PF: A Quick Failover Algorithm][RFC7829]
 * [8260 Stream Schedulers and User Message Interleaving (I-DATA Chunk)][RFC8260]
 
+* [Draft: ECN for Stream Control Transmission Protocol][ECN]
 
 ## Author
 Copyright (c) 2017-2018 Vladimir Latyshev
@@ -284,9 +276,12 @@ License: MIT
 [smpp]: https://www.npmjs.com/package/smpp
 [ppid]: https://www.iana.org/assignments/sctp-parameters/sctp-parameters.xhtml#sctp-parameters-25
 [RFC3758]: https://tools.ietf.org/html/rfc3758
+[RFC4820]: https://tools.ietf.org/html/rfc4820
+[RFC4895]: https://tools.ietf.org/html/rfc4895
 [RFC5061]: https://tools.ietf.org/html/rfc5061
-[RFC6096]: https://tools.ietf.org/html/rfc6096
+[RFC5062]: https://tools.ietf.org/html/rfc5062
 [RFC6525]: https://tools.ietf.org/html/rfc6525
 [RFC7053]: https://tools.ietf.org/html/rfc7053
 [RFC7829]: https://tools.ietf.org/html/rfc7829
 [RFC8260]: https://tools.ietf.org/html/rfc8260
+[ECN]: https://tools.ietf.org/html/draft-stewart-tsvwg-sctpecn-05

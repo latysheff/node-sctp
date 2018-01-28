@@ -28,7 +28,7 @@ const server = sctp.createServer(socket => {
     socket.pipe(fs.createWriteStream(fileName))
   }
 
-  const streamOut = socket.createStream(110)
+  const streamOut = socket.createStream(2)
 
   streamOut.on('error', error => {
     console.log(error.message)
@@ -73,22 +73,19 @@ const server = sctp.createServer(socket => {
   })
 })
 
-server.listen({
-  OS: 1000,
-  MIS: 10,
-  port
+server.on('error', error => {
+  console.error(error.message)
+  process.exit()
 })
 
-console.log('server started on port %d', port)
-console.log('now run test, for example:')
-console.log(
-  'info',
-  util.format(
-    'sctp_test -H <ip> -h <%s or another local ip> -p %d -s -P <port> -x 10000 -d0 -c 2 -D',
-    ip.address(),
-    port
+server.listen({OS: 10, MIS: 10, port}, () => {
+  console.log('server started on port %d', port)
+  console.log('now run test, for example:')
+  console.log(
+    util.format('sctp_test -H <ip> -h <%s or other local ip> -p %d -s -P <port> -x 10000 -d0 -c 1',
+      ip.address(), port)
   )
-)
+})
 
 process.on('SIGINT', () => {
   console.log('SIGINT')

@@ -11,11 +11,12 @@ let start
 
 const socket = sctp.connect({host, port}, () => {
   console.log('socket connected')
-  socket.on('error', error => {
-    console.error(error)
-  })
   start = Date.now()
   fs.createReadStream(node).pipe(socket)
+})
+
+socket.on('error', error => {
+  console.error(error.message)
 })
 
 const size = fs.statSync(node).size
