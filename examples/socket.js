@@ -31,6 +31,6 @@ socket.on('end', () => {
     )
   )
   // Close
-  socket.end()
+  // socket.end()
   process.exit()
 })

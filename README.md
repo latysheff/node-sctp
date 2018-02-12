@@ -11,8 +11,8 @@ Implementation of [RFC4960] is currently incomplete, use at your own risk.
 Module has alpha status. It is suitable for development purposes,
 not for production.
 
-Module is currently tested against `sctp_test` both as client and server.
-More compatibility testing will follow with use of stcp test tools and frameworks.
+Module is currently tested against `sctp_test` 
+and [SCTP Conformance Tests according to ETSI TS 102 369][sctptests].
 
 ## Installation
 npm install sctp
@@ -253,6 +253,7 @@ sctp.PPID is an object with [SCTP Payload Protocol Identifiers][ppid]
 * [5062 Security Attacks Found Against SCTP and Current Countermeasures][RFC5062]
 * [6525 Stream Reconfiguration][RFC6525]
 * [7053 SACK-IMMEDIATELY Extension (I-bit)][RFC7053]
+* [7496 Additional Policies for the Partially Reliable Extension][RFC7496]
 * [7829 SCTP-PF: A Quick Failover Algorithm][RFC7829]
 * [8260 Stream Schedulers and User Message Interleaving (I-DATA Chunk)][RFC8260]
 
@@ -282,6 +283,8 @@ License: MIT
 [RFC5062]: https://tools.ietf.org/html/rfc5062
 [RFC6525]: https://tools.ietf.org/html/rfc6525
 [RFC7053]: https://tools.ietf.org/html/rfc7053
+[RFC7496]: https://tools.ietf.org/html/rfc7496
 [RFC7829]: https://tools.ietf.org/html/rfc7829
 [RFC8260]: https://tools.ietf.org/html/rfc8260
 [ECN]: https://tools.ietf.org/html/draft-stewart-tsvwg-sctpecn-05
+[sctptests]: https://github.com/nplab/sctp-tests

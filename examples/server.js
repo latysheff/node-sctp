@@ -1,3 +1,5 @@
+#!/usr/bin/node
+
 const util = require('util')
 const fs = require('fs')
 
@@ -37,11 +39,11 @@ const server = sctp.createServer(socket => {
   socket.on('stream', (streamIn, id) => {
     console.log('< new sctp stream', id)
     // Uncomment to receive data
-    // streamIn.on('data', data => {
-    //   // Incoming data
-    //   // console.log('< received data on stream', data.length, 'bytes')
-    //   // streamOut.write(data)
-    // })
+    streamIn.on('data', data => {
+      // Incoming data
+      // console.log('< received data on stream', data.length, 'bytes')
+      streamOut.write(data)
+    })
   })
 
   socket.on('data', () => {

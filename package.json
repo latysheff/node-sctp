@@ -1,6 +1,6 @@
 {
   "name": "sctp",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "author": {
     "name": "Vladimir Latyshev",
     "email": "latysheff@gmail.com"
