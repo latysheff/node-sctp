@@ -5,14 +5,24 @@ Module presents the socket interface of [Net] module.
 Sockets for SCTP are described in [RFC6458].
 
 ## Module status
-> Warning!
-Implementation of [RFC4960] is currently incomplete, use at your own risk.
+Implementation of [RFC4960] is currently incomplete. At least it lacks handling silly window syndrome (SWS).
+Module is suitable for development purposes and small projects, not for production.
 
-Module has alpha status. It is suitable for development purposes,
-not for production.
-
-Module is currently tested against `sctp_test` 
+Module is being tested against `sctp_test` 
 and [SCTP Conformance Tests according to ETSI TS 102 369][sctptests].
+
+## Demo
+Assume local address is 192.168.1.216, remote is 192.168.1.16.
+
+Run test as follows:
+```
+on local machine:
+cd examples
+DEBUG=* node server.js
+
+on remote machine:
+sctp_test -H 192.168.1.16 -P 3000 -h 192.168.1.216 -p 3000 -s -x 100000 -c 1
+```
 
 ## Installation
 npm install sctp

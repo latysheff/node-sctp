@@ -80,7 +80,7 @@ server.on('error', error => {
   process.exit()
 })
 
-server.listen({OS: 10, MIS: 10, port}, () => {
+server.listen({ OS: 10, MIS: 10, port }, () => {
   console.log('server started on port %d', port)
   console.log('now run test, for example:')
   console.log(

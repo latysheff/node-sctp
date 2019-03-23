@@ -9,7 +9,7 @@ console.log(node, script, host, port)
 
 let start
 
-const socket = sctp.connect({host, port}, () => {
+const socket = sctp.connect({ host, port }, () => {
   console.log('socket connected')
   start = Date.now()
   fs.createReadStream(node).pipe(socket)

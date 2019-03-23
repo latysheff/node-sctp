@@ -7,7 +7,7 @@ sctp.defaults({
   rto_max: 1000
 })
 
-const server = sctp.createServer({logger: null})
+const server = sctp.createServer({ logger: null })
 
 server.on('connection', socket => {
   console.log(
@@ -45,7 +45,7 @@ const interval = setInterval(() => {
   newsocket()
 }, 1)
 
-function newsocket() {
+function newsocket () {
   count++
   const sctpSocket = sctp.connect(
     {

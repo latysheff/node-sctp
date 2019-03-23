@@ -12,11 +12,11 @@ server.on('connection', socket => {
   })
 })
 
-server.listen({port: 2905}, () => {
+server.listen({ port: 2905 }, () => {
   console.log('server listening')
 })
 
-const socket = sctp.connect({host: '127.0.0.1', port: 2905}, () => {
+const socket = sctp.connect({ host: '127.0.0.1', port: 2905 }, () => {
   console.log('socket connected')
   socket.write(Buffer.from('010003010000001000110008000003ea', 'hex'))
 })
