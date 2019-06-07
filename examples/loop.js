@@ -51,7 +51,6 @@ function newsocket () {
     {
       protocol: sctp.M3UA,
       host: '127.0.0.1',
-      // Host: '10.192.169.102',
       port: 3000
     },
     () => {

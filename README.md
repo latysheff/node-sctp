@@ -105,7 +105,7 @@ add the following line to a file in the directory "/etc/modprobe.d/"
 
 `install sctp /bin/true`
 
-### WebRTC mode (DTLS transport)
+### UDP / WebRTC mode (DTLS transport)
 This application of SCTP protocol is described in [RFC8261].
 
 >   The Stream Control Transmission Protocol (SCTP) as defined in
@@ -137,6 +137,23 @@ let socket = sctp.connect({
 
 In UDP/DTLS mode host and localAddress will be ignored,
 because addressing is provided by underlying transport.
+
+To use normal UDP socket, you should provide 'udpPeer':
+
+```
+let socket = sctp.connect({
+       passive: true,
+       localPort: 5000,
+       port: 5000,
+       udpTransport: udpSocket,
+       udpPeer: {
+         host: '192.168.0.123',
+         port: 15002
+       }
+     }
+```
+
+See examples/udp.js
 
 Also note that in most cases "passive" connect is a better alternative to creating server.
 
