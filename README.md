@@ -198,7 +198,7 @@ Will be added as a listener for the 'connect' event once.
 For SCTP connections, available options are:
 
 * port [number] Required. Port the socket should connect to.
-* host [string] Host the socket should connect to. Default: 'localhost'
+* host [string] Host the socket should connect to.
 * localAddress [string] Local address the socket should connect from.
 * localPort [number] Local port the socket should connect from.
 * MIS [number] Maximum inbound streams. Default: 2

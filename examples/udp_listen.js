@@ -2,24 +2,29 @@ const dgram = require('dgram')
 process.env.DEBUG = '*'
 const sctp = require('../lib/')
 
+const ADDRESS = '192.168.1.217'
+
 const udpSocket = dgram.createSocket({
   type: 'udp4'
 })
 
-udpSocket.bind(15001)
+udpSocket.bind(15002, ADDRESS)
 
 let socket = sctp.connect({
-  localPort: 5000,
-  localAddress: '127.0.0.1',
-  host: '127.0.0.2',
+  localPort: 5002,
   port: 5001,
+  passive: true,
   udpTransport: udpSocket,
   udpPeer: {
-    host: '192.168.0.123',
-    port: 15002
+    address: ADDRESS,
+    port: 15001
   }
 })
 
 socket.on('error', error => {
   console.error(error.message)
+})
+
+socket.on('data', (buffer) => {
+  console.log(buffer.toString())
 })

@@ -1,6 +1,6 @@
 {
   "name": "sctp",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "author": {
     "name": "Vladimir Latyshev",
     "email": "latysheff@gmail.com"
@@ -11,13 +11,13 @@
   "dependencies": {
     "debug": "^4.1.1",
     "ip": "^1.1.5",
-    "polycrc": "^0.1.0",
-    "standard": "^12.0.1",
-    "tape": "^4.10.1"
+    "polycrc": "^0.1.0"
   },
   "devDependencies": {
     "lodash": "^4.17.11",
-    "raw-socket": "^1.6.4"
+    "raw-socket": "^1.6.4",
+    "standard": "^12.0.1",
+    "tape": "^4.10.1"
   },
   "description": "SCTP network protocol (RFC4960) in plain Javascript",
   "keywords": [
