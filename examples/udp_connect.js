@@ -10,9 +10,8 @@ const udpSocket = dgram.createSocket({
 
 udpSocket.bind(15001, ADDRESS)
 
-console.log(process.version.slice(1, 3) === '12')
 
-if (process.version.slice(1, 3) === '12') {
+if (typeof udpSocket.connect === 'function') {
   udpSocket.connect(15002, ADDRESS, () => {
     let socket = sctp.connect({
       localPort: 5001,
