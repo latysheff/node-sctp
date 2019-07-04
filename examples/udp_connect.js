@@ -29,6 +29,9 @@ if (typeof udpSocket.connect === 'function') {
     socket.on('connect', () => {
       socket.write(buffer)
     })
+
+    const stream = socket.createStream(2)
+    stream.write(buffer)
   })
 } else {
   let socket = sctp.connect({
@@ -46,6 +49,9 @@ if (typeof udpSocket.connect === 'function') {
   })
 
   socket.on('connect', () => {
-    socket.write(buffer)
+    // socket.write(buffer)
+
+    const stream = socket.createStream(1)
+    stream.write(buffer)
   })
 }

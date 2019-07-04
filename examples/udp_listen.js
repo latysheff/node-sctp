@@ -26,5 +26,11 @@ socket.on('error', error => {
 })
 
 socket.on('data', (buffer) => {
-  console.log('received buffer', buffer.ppid, buffer.length) // , buffer.toString('hex'))
+  console.log('socket received', buffer.ppid, buffer.length)
+})
+
+socket.on('stream', (stream, id) => {
+  stream.on('data', buffer => {
+    console.log('stream %d received', id, buffer.ppid, buffer.length)
+  })
 })
