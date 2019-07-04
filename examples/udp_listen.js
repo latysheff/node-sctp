@@ -1,5 +1,5 @@
 const dgram = require('dgram')
-process.env.DEBUG = '*'
+process.env.DEBUG = 'sctp:sock1*'
 const sctp = require('../lib/')
 
 const ADDRESS = '192.168.1.217'
@@ -26,5 +26,5 @@ socket.on('error', error => {
 })
 
 socket.on('data', (buffer) => {
-  console.log(buffer.toString())
+  console.log('received buffer', buffer.ppid, buffer.length) // , buffer.toString('hex'))
 })
