@@ -206,9 +206,14 @@ For SCTP connections, available options are:
 * passive [boolean] Indicates passive mode. Socket will not connect,
 but allow connection of remote socket from host:port. Default: false
 * udpTransport [Object] UDP transport socket
+* ppid [number] default PPID for packets. Default: 0
 
-### socket.createStream(id)
-Creates SCTP stream with stream id. Those are SCTP socket sub-streams.
+### socket.createStream(streamId, ppid)
+Creates SCTP stream. Those are SCTP socket sub-streams. If stream already exists, returns it.
+Stream 0 always exists.
+
+* streamId [number] stream id. Default: 0
+* ppid [number] default PPID for packets (if not set, socket setting is used)
 
 > After the association is initialized, the valid outbound stream
   identifier range for either endpoint shall be 0 to min(local OS, remote MIS)-1.
@@ -222,6 +227,11 @@ Result is stream.Writable.
 const stream = socket.createStream(1)
 stream.write('some data')
 ```
+
+### socket.write(buffer)
+It is possible to change PPID per chunk by setting buffer.ppid to desired value.
+
+`buffer.ppid = sctp.PPID.WEBRTC_STRING`
 
 ### Socket events
 See [Net] module documentation.

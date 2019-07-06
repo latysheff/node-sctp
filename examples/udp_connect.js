@@ -30,7 +30,7 @@ if (typeof udpSocket.connect === 'function') {
       socket.write(buffer)
     })
 
-    const stream = socket.createStream(2)
+    const stream = socket.createStream(1)
     stream.write(buffer)
   })
 } else {
@@ -41,7 +41,8 @@ if (typeof udpSocket.connect === 'function') {
     udpPeer: {
       address: ADDRESS,
       port: 15002
-    }
+    },
+    ppid: sctp.PPID.WEBRTC_DCEP
   })
 
   socket.on('error', error => {
@@ -49,9 +50,9 @@ if (typeof udpSocket.connect === 'function') {
   })
 
   socket.on('connect', () => {
-    // socket.write(buffer)
+    socket.write(buffer)
 
-    const stream = socket.createStream(1)
-    stream.write(buffer)
+    // const stream = socket.createStream(0,12)
+    // stream.write(buffer)
   })
 }
