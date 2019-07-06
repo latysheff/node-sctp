@@ -10,7 +10,7 @@ const udpSocket = dgram.createSocket({
 
 udpSocket.bind(15001, ADDRESS)
 
-const buffer = Buffer.alloc(2 * 1024 * 1024)
+const buffer = Buffer.alloc(20 * 1024 * 1024)
 buffer.fill('hello')
 buffer.ppid = sctp.PPID.WEBRTC_STRING
 
