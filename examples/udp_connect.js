@@ -1,5 +1,5 @@
 const dgram = require('dgram')
-process.env.DEBUG = 'sctp:sock*'
+process.env.DEBUG = 'sctp:s*'
 const sctp = require('../lib/')
 
 const ADDRESS = '192.168.1.217'
@@ -10,7 +10,7 @@ const udpSocket = dgram.createSocket({
 
 udpSocket.bind(15001, ADDRESS)
 
-const buffer = Buffer.alloc(10 * 1000 * 1000)
+const buffer = Buffer.alloc(2 * 1024 * 1024)
 buffer.fill('hello')
 buffer.ppid = sctp.PPID.WEBRTC_STRING
 
@@ -42,6 +42,7 @@ if (typeof udpSocket.connect === 'function') {
       address: ADDRESS,
       port: 15002
     },
+    OS: 100,
     ppid: sctp.PPID.WEBRTC_DCEP
   })
 
@@ -50,9 +51,12 @@ if (typeof udpSocket.connect === 'function') {
   })
 
   socket.on('connect', () => {
-    socket.write(buffer)
+    // socket.write(buffer)
 
-    // const stream = socket.createStream(0,12)
-    // stream.write(buffer)
+    socket.createStream(1).write(buffer)
+
+    delete buffer.ppid
+    socket.createStream(2, 33).write(buffer)
+    socket.createStream(3, 44).write(buffer)
   })
 }

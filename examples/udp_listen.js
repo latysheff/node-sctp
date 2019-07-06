@@ -1,5 +1,5 @@
 const dgram = require('dgram')
-process.env.DEBUG = 'sctp:sock1*'
+process.env.DEBUG = 'sctp:x*'
 const sctp = require('../lib/')
 
 const ADDRESS = '192.168.1.217'
@@ -18,7 +18,8 @@ let socket = sctp.connect({
   udpPeer: {
     address: ADDRESS,
     port: 15001
-  }
+  },
+  MIS: 100
 })
 
 socket.on('error', error => {
