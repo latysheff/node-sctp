@@ -118,9 +118,11 @@ This application of SCTP protocol is described in [RFC8261].
     WebRTC protocol suite (see [RTC-OVERVIEW] for an overview) for
     transporting non-SRTP data between browsers.
 
-Underlying transport layer should implement [UDP] API.
+Underlying transport layer should implement [UDP] API. Actually, plain UDP may be used also.
 
 In this mode Node.js application can be a peer in WebRTC [data channel][RTCDataChannel].
+
+Note: currently association in UDP mode can not detect peer restart and handle new unexpected INIT properly. This bug is to be fixed. Please, change port as a workaround.
 
 #### Usage
 You need to provide 'udpTransport' option
