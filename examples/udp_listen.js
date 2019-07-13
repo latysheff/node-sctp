@@ -2,9 +2,7 @@ const dgram = require('dgram')
 process.env.DEBUG = 'sctp:x*'
 const sctp = require('../lib/')
 
-sctp.defaults({
-  sack_freq: 1,
-})
+sctp.defaults({ sack_freq: 1 })
 
 const ADDRESS = '192.168.1.217'
 

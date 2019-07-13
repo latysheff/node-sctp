@@ -242,7 +242,7 @@ It signals that incoming data chunk were noticed with new SCTP stream id.
 ```
 socket.on('stream', (stream, id) => {
   stream.on('data', data => {
-    // Incoming data
+    // Incoming data (data.ppid indicates the SCTP message PPID value)
   })
 })
 ```
