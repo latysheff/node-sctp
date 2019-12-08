@@ -1,5 +1,5 @@
 const dgram = require('dgram')
-process.env.DEBUG = 'sctp:x*'
+process.env.DEBUG = 'sctp:s*'
 const sctp = require('../lib/')
 
 sctp.defaults({ sack_freq: 1 })
